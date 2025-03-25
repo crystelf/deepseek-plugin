@@ -20,5 +20,5 @@ try{
         `共加载了 ${loadedFilesCount} 个插件文件，${loadedFilesCounterr} 个失败~`
     )
 } catch(error) {
-    logger.error(`$AppName插件加载失败了：`,error);
+    logger.error(`${AppName}插件加载失败了：`,error);
 }
