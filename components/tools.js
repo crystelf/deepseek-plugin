@@ -1,13 +1,13 @@
 import fs from 'fs'
 import path from 'path'
+import { configPath, defaultConfig, Plugin_Name } from '../constants/path.js'
 
 const _path = process.cwd()
-const plugin = "deepseek-plugin"
 const getRoot = (root = "") => {
   if (root === "root" || root === "yunzai") {
     root = `${_path}/`
   } else if (!root) {
-    root = `${_path}/plugins/${plugin}/`
+    root = `${_path}/plugins/${Plugin_Name}/`
   }
   return root
 }
@@ -50,10 +50,10 @@ let fc = {
 
   /**
    * 写JSON
-   * @param file
-   * @param data
-   * @param root
-   * @param space
+   * @param {string} file - 文件路径
+   * @param {object} data - 要合并的数据
+   * @param {string} [root=""] - 根目录
+   * @param {number} [space=4] - JSON缩进空格数
    */
   writeJSON(file, data, root = "", space = 4) {
     fc.createDir(file, root, true)
@@ -65,6 +65,59 @@ let fc = {
       logger.error(err)
       return false
     }
+  },
+
+  /**
+   * 合并写入JSON文件（保留原有数据）
+   * @param {string} file - 文件路径
+   * @param {object} data - 要合并的数据
+   * @param {string} [root=""] - 根目录
+   * @param {number} [space=4] - JSON缩进空格数
+   * @returns {boolean} 是否写入成功
+   */
+  SafewriteJSON(file, data, root = "", space = 4) {
+    fc.createDir(file, root, true);
+    root = getRoot(root);
+    const filePath = `${root}/${file}`;
+
+    try {
+      let existingData = {};
+      if (fs.existsSync(filePath)) {
+        try {
+          existingData = JSON.parse(fs.readFileSync(filePath, 'utf8')) || {};
+        } catch (e) {
+          logger.warn(`无法解析现有JSON文件 ${filePath}，将创建新文件`);
+        }
+      }
+
+      const mergedData = this.deepMerge(existingData, data);
+
+      fs.writeFileSync(filePath, JSON.stringify(mergedData, null, space));
+      return true;
+    } catch (err) {
+      logger.error(`写入JSON文件失败 ${filePath}:`, err);
+      return false;
+    }
+  },
+
+  /**
+   * 深度合并对象
+   * @param {object} target - 目标对象
+   * @param {object} source - 源对象
+   * @returns {object} 合并后的对象
+   */
+  deepMerge(target, source) {
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) {
+        if (source[key] && typeof source[key] === 'object' &&
+            target[key] && typeof target[key] === 'object') {
+          this.deepMerge(target[key], source[key]);
+        } else {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
   },
 
   async importModule(file, root = "") {
