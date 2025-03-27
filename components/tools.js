@@ -14,6 +14,16 @@ const getRoot = (root = "") => {
 
 let fc = {
 
+  /**
+   * 递归创建目录结构
+   * @param {string} [path=""] - 要创建的相对路径，支持多级目录（如 "dir1/dir2"）
+   * @param {string} [root=""] - 基础根目录，可选值：
+   *                            - "root" 或 "yunzai": 使用 Yunzai 根目录
+   *                            - 空值: 使用插件目录
+   * @param {boolean} [includeFile=false] - 是否包含最后一级作为文件名
+   * @example
+   * fc.createDir("config/deepseek", "root") // 在 Yunzai 根目录创建 config/deepseek 目录
+   */
   createDir(path = "", root = "", includeFile = false) {
     root = getRoot(root)
     let pathList = path.split("/")
@@ -32,9 +42,12 @@ let fc = {
   },
 
   /**
-   * 读取json
-   * @param file
-   * @param root
+   * 读取JSON文件
+   * @param {string} [file=""] - JSON文件路径（相对路径）
+   * @param {string} [root=""] - 基础根目录（同 createDir）
+   * @returns {object} 解析后的JSON对象，如文件不存在或解析失败返回空对象
+   * @example
+   * const config = fc.readJSON("config.json", "root")
    */
   readJSON(file = "", root = "") {
     root = getRoot(root)
@@ -49,11 +62,15 @@ let fc = {
   },
 
   /**
-   * 写JSON
-   * @param {string} file - 文件路径
-   * @param {object} data - 要合并的数据
-   * @param {string} [root=""] - 根目录
-   * @param {number} [space=4] - JSON缩进空格数
+   * 写入JSON文件（完全覆盖模式）
+   * @param {string} file - 目标文件路径
+   * @param {object} data - 要写入的JSON数据
+   * @param {string} [root=""] - 基础根目录（同 createDir）
+   * @param {number} [space=4] - JSON格式化缩进空格数
+   * @returns {boolean} 是否写入成功
+   * @warning 此方法会完全覆盖目标文件原有内容
+   * @example
+   * fc.writeJSON("config.json", {key: "value"}, "root", 4)
    */
   writeJSON(file, data, root = "", space = 4) {
     fc.createDir(file, root, true)
@@ -68,12 +85,18 @@ let fc = {
   },
 
   /**
-   * 合并写入JSON文件（保留原有数据）
-   * @param {string} file - 文件路径
+   * 安全写入JSON文件（合并模式）
+   * @param {string} file - 目标文件路径
    * @param {object} data - 要合并的数据
-   * @param {string} [root=""] - 根目录
-   * @param {number} [space=4] - JSON缩进空格数
+   * @param {string} [root=""] - 基础根目录（同 createDir）
+   * @param {number} [space=4] - JSON格式化缩进空格数
    * @returns {boolean} 是否写入成功
+   * @description
+   * - 如果目标文件不存在，创建新文件
+   * - 如果目标文件存在，深度合并新旧数据
+   * - 如果目标文件损坏，会创建新文件并记录警告
+   * @example
+   * fc.SafewriteJSON("config.json", {newKey: "value"})
    */
   SafewriteJSON(file, data, root = "", space = 4) {
     fc.createDir(file, root, true);
@@ -101,10 +124,17 @@ let fc = {
   },
 
   /**
-   * 深度合并对象
-   * @param {object} target - 目标对象
+   * 深度合并两个对象
+   * @param {object} target - 目标对象（将被修改）
    * @param {object} source - 源对象
-   * @returns {object} 合并后的对象
+   * @returns {object} 合并后的目标对象
+   * @description
+   * - 递归合并嵌套对象
+   * - 对于非对象属性直接覆盖
+   * - 不会合并数组（数组会被直接覆盖）
+   * @example
+   * const merged = fc.deepMerge({a: 1}, {b: {c: 2}})
+   * // 返回 {a: 1, b: {c: 2}}
    */
   deepMerge(target, source) {
     for (const key in source) {
@@ -120,6 +150,17 @@ let fc = {
     return target;
   },
 
+  /**
+   * 动态导入JS模块
+   * @param {string} file - 模块文件路径（可省略.js后缀）
+   * @param {string} [root=""] - 基础根目录（同 createDir）
+   * @returns {Promise<object>} 模块导出对象，如导入失败返回空对象
+   * @description
+   * - 自动添加时间戳参数防止缓存
+   * - 自动补全.js后缀
+   * @example
+   * const module = await fc.importModule("utils/helper")
+   */
   async importModule(file, root = "") {
     root = getRoot(root)
     if (!/\.js$/.test(file)) {
@@ -136,20 +177,41 @@ let fc = {
     return {}
   },
 
+  /**
+   * 动态导入JS模块的默认导出
+   * @param {string} file - 模块文件路径
+   * @param {string} [root=""] - 基础根目录（同 createDir）
+   * @returns {Promise<object>} 模块的默认导出，如失败返回空对象
+   * @example
+   * const defaultExport = await fc.importDefault("components/Header")
+   */
   async importDefault(file, root) {
     let ret = await fc.importModule(file, root)
     return ret.default || {}
   },
 
+  /**
+   * 异步延时函数
+   * @param {number} ms - 等待的毫秒数
+   * @returns {Promise<void>}
+   * @example
+   * await fc.sleep(1000) // 等待1秒
+   */
   sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
   },
 
   /**
-   * 读取文件夹和子文件夹指定后缀文件名
-   * @param directory
-   * @param extension
-   * @param excludeDir
+   * 递归读取目录中的特定扩展名文件
+   * @param {string} directory - 要搜索的目录路径
+   * @param {string} extension - 文件扩展名（不带点）
+   * @param {string} [excludeDir] - 要排除的目录名
+   * @returns {string[]} 匹配的文件相对路径数组
+   * @description
+   * - 自动跳过以下划线开头的文件
+   * - 结果包含子目录中的文件
+   * @example
+   * const jsFiles = fc.readDirRecursive("./plugins", "js", "node_modules")
    */
   readDirRecursive(directory, extension, excludeDir) {
     let files = fs.readdirSync(directory)
