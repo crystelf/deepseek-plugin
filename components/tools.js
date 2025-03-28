@@ -272,9 +272,9 @@ let fc = {
    * @param {*} source - 要克隆的数据
    * @returns {*} 深度克隆后的副本
    * @description
-   * 1. 处理循环引用
-   * 2. 保持原型链
-   * 3. 支持特殊对象类型（Date/RegExp等）
+   * - 处理循环引用
+   * - 保持原型链
+   * - 支持特殊对象类型（Date/RegExp等）
    * @example
    * const obj = { a: 1, b: [2, 3] };
    * const cloned = fc.deepClone(obj);
