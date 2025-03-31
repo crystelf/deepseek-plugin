@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { configPath, defaultConfig, Plugin_Name } from '../constants/path.js'
+import {Plugin_Name} from '#path'
 
 const _path = process.cwd()
 const getRoot = (root = "") => {
@@ -61,6 +61,16 @@ let fc = {
     return {}
   },
 
+  statSync(file = "", root = "") {
+    root = getRoot(root)
+    try {
+      return fs.statSync(`${root}/${file}`)
+    } catch (e){
+      console.log(e)
+    }
+
+  },
+
   /**
    * 写入JSON文件（完全覆盖）
    * @param {string} file - 目标文件路径
@@ -96,9 +106,9 @@ let fc = {
    * - 如果目标文件存在，深度合并新旧数据
    * - 如果目标文件损坏，会创建新文件并记录警告
    * @example
-   * fc.SafewriteJSON("config.json", {newKey: "value"})
+   * fc.safewriteJSON("config.json", {newKey: "value"})
    */
-  SafewriteJSON(file, data, root = "", space = 4) {
+  safewriteJSON(file, data, root = "", space = 4) {
     fc.createDir(file, root, true);
     root = getRoot(root);
     const filePath = `${root}/${file}`;

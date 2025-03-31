@@ -22,7 +22,8 @@
   },
   "imports": {
     "#components": "./components/index.js",
-    "#config": "./config/index.js"
+    "#path": "./constants/path.js",
+    "#lib": "./lib/index.js"
   }
 
 }

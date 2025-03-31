@@ -14,3 +14,4 @@ const configFile = fs.readFileSync(defaultConfigPath,"utf8")
 export const defaultConfig = JSON.parse(configFile)
 const README_path = `${Plugin_Path}/README.md`
 const CHANGELOG_path = `${Plugin_Path}/CHANGELOG.md`
+export const deepseekConfigPath = "data/deepseek/config.json"
