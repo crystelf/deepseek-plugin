@@ -25,5 +25,6 @@
     "blackGroups": [114, 514]
   },
   "muteInfo": {},
-  "max_message_length": 100
+  "max_message_length": 100,
+  "mode": "info"
 }

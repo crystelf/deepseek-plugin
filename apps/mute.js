@@ -1,7 +1,7 @@
-import configControl from "./../lib/config/configManager.js"
-import date from "./../components/date.js"
+import {configControl} from "#lib"
+import {date} from "#components"
 
-let DeepseekConfig = {};
+let DeepseekConfig = configControl.getConfig()
 
 export class Deepseek extends plugin {
     constructor() {
@@ -19,7 +19,7 @@ export class Deepseek extends plugin {
             ]
         });
 
-        this.initMuteListener();
+        this.initMuteListener()
     }
 
     initMuteListener() {
@@ -46,9 +46,10 @@ export class Deepseek extends plugin {
         DeepseekConfig.muteInfo = DeepseekConfig.muteInfo || {}
         DeepseekConfig.muteInfo[group_id] = muteEndTime
 
-        await configControl.updateConfig(DeepseekConfig);
-        console.log(`Bot在群 ${group_id} 中被禁言! 结束时间：${new Date(muteEndTime * 1000).toLocaleString()}`)
-
+        await configControl.updateConfig(DeepseekConfig)
+        if(mode==="debug") {
+            logger.warn(`Bot在群 ${group_id} 中被禁言! 结束时间：${new Date(muteEndTime * 1000).toLocaleString()}`)
+        }
         setTimeout(async () => {
             await this.handleUnmute(group_id)
         }, duration * 1000)
@@ -58,7 +59,9 @@ export class Deepseek extends plugin {
         if (DeepseekConfig.muteInfo?.[group_id]) {
             delete DeepseekConfig.muteInfo[group_id]
             await configControl.updateConfig(DeepseekConfig)
-            console.log(`Bot在群 ${group_id} 的禁言已自动解除`)
+            if(mode==="debug") {
+                logger.mark(`Bot在群 ${group_id} 的禁言已自动解除`)
+            }
         }
     }
 
@@ -91,7 +94,7 @@ export class Deepseek extends plugin {
 
             e.reply(message)
         } catch (err) {
-            console.error('检查禁言失败:', err)
+            logger.error('检查禁言失败:', err)
             e.reply("检查禁言状态时出错，请查看日志~")
         }
     }

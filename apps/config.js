@@ -1,4 +1,5 @@
-import configControl from "./../lib/config/configManager.js"
+import {configControl } from "#lib"
+import { deepseekInit } from "#lib"
 let config = configControl.getConfig()
 
 export class DeepSeek extends plugin {
@@ -38,6 +39,16 @@ export class DeepSeek extends plugin {
                     reg: '^#deepseek切换模型(\\d+)$',
                     fnc: 'switchModel',
                     permission: 'master'
+                },
+                {
+                    reg: '^#deepseek初始化$',
+                    fnc: 'deepseekInit',
+                    permission: 'master'
+                },
+                {
+                    reg: '^#deepseek调试$',
+                    fnc: 'deepseekDebug',
+                    permission: 'master'
                 }
 
             ]
@@ -76,7 +87,7 @@ export class DeepSeek extends plugin {
         configControl.updateConfig({
             default_max_length: length
         })
-        e.reply('设置成功')
+        e.reply('设置成功~')
     }
 
     async setHistoryLength(e) {
@@ -84,7 +95,7 @@ export class DeepSeek extends plugin {
         configControl.updateConfig({
             default_history_length: length
         })
-        e.reply('设置成功')
+        e.reply('设置成功~')
     }
 
     async setPrompt(e) {
@@ -92,7 +103,7 @@ export class DeepSeek extends plugin {
         configControl.updateConfig({
             default_prompt: prompt
         })
-        e.reply('设置成功')
+        e.reply('设置成功~')
     }
 
     async setTemperature(e) {
@@ -100,6 +111,42 @@ export class DeepSeek extends plugin {
         configControl.updateConfig({
             default_temperature: temperature
         })
-        e.reply('设置成功')
+        e.reply('设置成功~')
+    }
+
+    async deepseekInit(e){
+        try {
+            deepseekInit.CSH()
+            e.reply('deepseek初始化成功..')
+        } catch (err) {
+            console.error(e)
+            e.reply(`deepseek初始化发生了点错误：${err}`)
+        }
+    }
+
+    async deepseekDebug(e){
+        let deepseekConfig = configControl.getConfig()
+        let mode = deepseekConfig.mode
+        if(mode === "debug"){
+            try {
+                configControl.updateConfig({
+                    mode: "info"
+                })
+                e.reply(`成功关闭debug模式..`)
+            } catch (err) {
+                console.error(err)
+                e.reply(`出错了..${err}`)
+            }
+        } else if(mode === "info"){
+            try {
+                configControl.updateConfig({
+                    mode: "debug"
+                })
+                e.reply('成功启用debug模式..')
+            } catch (err) {
+                console.error(err)
+                e.reply(`出错了..${err}`)
+            }
+        }
     }
 }
