@@ -1,8 +1,8 @@
-import Version from './components/Version.js'
+import Version from './components/version.js'
 import chalk from "chalk"
-import { Plugin_Path, Plugin_Name, configPath, configDir, defaultConfig, defaultConfigPath} from './constants/path.js'
+import { Plugin_Path, configPath, configDir, defaultConfig} from '#path'
 import fs from 'fs'
-import fc from "./components/tools.js"
+import fc from "./components/json.js"
 logger.info(chalk.rgb(134, 142, 204)(`deepseek-plugin${Version.ver}初始化~`))
 const app = "/apps"
 const appPath = Plugin_Path+app
@@ -47,7 +47,7 @@ let apps = {}
 for (let i in jsFiles) {
   let name = jsFiles[i].replace(".js", "")
 
-  if (ret[i].status != "fulfilled") {
+  if (ret[i].status !== "fulfilled") {
     logger.error(name, ret[i].reason)
     continue
   }

@@ -1,3 +1,3 @@
-export { default as Version } from "./Version.js"
-export { default as fc } from "./tools.js"
+export { default as Version } from "./version.js"
+export { default as fc } from "./json.js"
 

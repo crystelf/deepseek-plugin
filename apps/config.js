@@ -1,5 +1,5 @@
-import fc from "./../components/tools.js"
 import configControl from "./../lib/config/configManager.js"
+let config = configControl.getConfig()
 
 export class DeepSeek extends plugin {
     constructor() {
@@ -43,7 +43,6 @@ export class DeepSeek extends plugin {
             ]
         });
 
-        this.config = configControl.getConfig()
     }
 
 
