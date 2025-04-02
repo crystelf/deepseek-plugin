@@ -52,7 +52,7 @@ export class DeepSeek extends plugin {
                 }
 
             ]
-        });
+        })
 
     }
 

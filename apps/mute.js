@@ -17,7 +17,7 @@ export class Deepseek extends plugin {
                     permission: 'master'
                 }
             ]
-        });
+        })
 
         this.initMuteListener()
     }
@@ -27,7 +27,7 @@ export class Deepseek extends plugin {
             if (e.sub_type === "ban" && e.user_id === e.bot.uin) {
                 await this.handleMuteEvent(e)
             }
-        });
+        })
     }
 
     async handleMuteEvent(e) {
