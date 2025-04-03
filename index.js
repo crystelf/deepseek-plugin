@@ -1,10 +1,10 @@
-import {Version} from '#components'
+import {version} from '#components'
 import chalk from "chalk"
 import { Plugin_Path} from '#path'
 import {fc} from "#components"
 import {deepseekInit} from "#lib";
 
-logger.info(chalk.rgb(134, 142, 204)(`deepseek-plugin${Version.ver}初始化~`))
+logger.info(chalk.rgb(134, 142, 204)(`deepseek-plugin${version.ver}初始化~`))
 
 const app = "/apps"
 const appPath = Plugin_Path+app
