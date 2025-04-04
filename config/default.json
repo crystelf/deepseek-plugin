@@ -21,8 +21,13 @@
   "checkChat": {
     "rdNum": 2,
     "masterReply": true,
-    "userId": [114514],
-    "blackGroups": [114, 514]
+    "userId": [
+      114514
+    ],
+    "blackGroups": [
+      114,
+      514
+    ]
   },
   "muteInfo": {},
   "max_message_length": 100,

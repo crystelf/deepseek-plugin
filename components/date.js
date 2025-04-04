@@ -1,6 +1,4 @@
-
 let date = {
-
   /**
    * 格式化日期时间
    * @param {Date|number|string} [date=new Date()] - 可接收Date对象、时间戳或日期字符串
@@ -13,7 +11,7 @@ let date = {
    */
   formatDate(date = new Date(), format = 'YYYY-MM-DD HH:mm:ss') {
     const d = new Date(date);
-    const pad = n => n.toString().padStart(2, '0');
+    const pad = (n) => n.toString().padStart(2, '0');
 
     return format
       .replace(/YYYY/g, pad(d.getFullYear()))
@@ -30,14 +28,17 @@ let date = {
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
 
-    return [
-      days > 0 ? `${days}天` : "",
-      hours > 0 ? `${hours}小时` : "",
-      mins > 0 ? `${mins}分钟` : "",
-      secs > 0 ? `${secs}秒` : ""
-    ].filter(Boolean).join(" ") || "0秒";
-  }
-
-}
+    return (
+      [
+        days > 0 ? `${days}天` : '',
+        hours > 0 ? `${hours}小时` : '',
+        mins > 0 ? `${mins}分钟` : '',
+        secs > 0 ? `${secs}秒` : '',
+      ]
+        .filter(Boolean)
+        .join(' ') || '0秒'
+    );
+  },
+};
 
 export default date;

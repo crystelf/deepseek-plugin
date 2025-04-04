@@ -1,6 +1,4 @@
-
 let tools = {
-
   /**
    * 异步延时函数
    * @param {number} ms - 等待的毫秒数
@@ -40,7 +38,7 @@ let tools = {
    */
   debounce(fn, delay = 300, immediate = false) {
     let timer = null;
-    return function(...args) {
+    return function (...args) {
       if (immediate && !timer) {
         fn.apply(this, args);
       }
@@ -120,11 +118,8 @@ let tools = {
 
     if (stack.length <= 1) return message;
 
-    return [
-      message,
-      ...stack.slice(1, depth + 1).map(line => line.trim())
-    ].join('\n    at ');
-  }
-}
+    return [message, ...stack.slice(1, depth + 1).map((line) => line.trim())].join('\n    at ');
+  },
+};
 
 export default tools;

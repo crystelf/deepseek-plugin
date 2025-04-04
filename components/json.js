@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import {Plugin_Name} from '#path';
+import { Plugin_Name } from '#path';
 
 const _path = process.cwd();
-const getRoot = (root = "") => {
-  if (root === "root" || root === "yunzai") {
+const getRoot = (root = '') => {
+  if (root === 'root' || root === 'yunzai') {
     root = `${_path}/`;
   } else if (!root) {
     root = `${_path}/plugins/${Plugin_Name}/`;
@@ -13,7 +13,6 @@ const getRoot = (root = "") => {
 };
 
 let fc = {
-
   /**
    * 递归创建目录结构
    * @param {string} [path=""] - 要创建的相对路径，支持多级目录（如 "dir1/dir2"）
@@ -24,14 +23,14 @@ let fc = {
    * @example
    * fc.createDir("config/deepseek", "root") // 在 Yunzai 根目录创建 config/deepseek 目录
    */
-  createDir(path = "", root = "", includeFile = false) {
+  createDir(path = '', root = '', includeFile = false) {
     root = getRoot(root);
-    let pathList = path.split("/");
+    let pathList = path.split('/');
     let nowPath = root;
     pathList.forEach((name, idx) => {
       name = name.trim();
       if (!includeFile && idx <= pathList.length - 1) {
-        nowPath += name + "/";
+        nowPath += name + '/';
         if (name) {
           if (!fs.existsSync(nowPath)) {
             fs.mkdirSync(nowPath);
@@ -49,11 +48,11 @@ let fc = {
    * @example
    * const config = fc.readJSON("config.json", "root")
    */
-  readJSON(file = "", root = "") {
+  readJSON(file = '', root = '') {
     root = getRoot(root);
     if (fs.existsSync(`${root}/${file}`)) {
       try {
-        return JSON.parse(fs.readFileSync(`${root}/${file}`, "utf8"));
+        return JSON.parse(fs.readFileSync(`${root}/${file}`, 'utf8'));
       } catch (e) {
         console.log(e);
       }
@@ -61,14 +60,13 @@ let fc = {
     return {};
   },
 
-  statSync(file = "", root = "") {
+  statSync(file = '', root = '') {
     root = getRoot(root);
     try {
       return fs.statSync(`${root}/${file}`);
-    } catch (e){
+    } catch (e) {
       console.log(e);
     }
-
   },
 
   /**
@@ -82,7 +80,7 @@ let fc = {
    * @example
    * fc.writeJSON("config.json", {key: "value"}, "root", 4)
    */
-  writeJSON(file, data, root = "", space = 4) {
+  writeJSON(file, data, root = '', space = 4) {
     fc.createDir(file, root, true);
     root = getRoot(root);
     try {
@@ -108,7 +106,7 @@ let fc = {
    * @example
    * fc.safewriteJSON("config.json", {newKey: "value"})
    */
-  safeWriteJSON(file, data, root = "", space = 4) {
+  safeWriteJSON(file, data, root = '', space = 4) {
     fc.createDir(file, root, true);
     root = getRoot(root);
     const filePath = `${root}/${file}`;
@@ -149,8 +147,12 @@ let fc = {
   deepMerge(target, source) {
     for (const key in source) {
       if (source.hasOwnProperty(key)) {
-        if (source[key] && typeof source[key] === 'object' &&
-          target[key] && typeof target[key] === 'object') {
+        if (
+          source[key] &&
+          typeof source[key] === 'object' &&
+          target[key] &&
+          typeof target[key] === 'object'
+        ) {
           this.deepMerge(target[key], source[key]);
         } else {
           target[key] = source[key];
@@ -175,17 +177,23 @@ let fc = {
   readDirRecursive(directory, extension, excludeDir) {
     let files = fs.readdirSync(directory);
 
-    let jsFiles = files.filter(file => path.extname(file) === `.${extension}` && !file.startsWith("_"));
+    let jsFiles = files.filter(
+      (file) => path.extname(file) === `.${extension}` && !file.startsWith('_')
+    );
 
-    files.filter(file => fs.statSync(path.join(directory, file)).isDirectory())
-      .forEach(subdirectory => {
+    files
+      .filter((file) => fs.statSync(path.join(directory, file)).isDirectory())
+      .forEach((subdirectory) => {
         if (subdirectory === excludeDir) {
           return;
         }
 
         const subdirectoryPath = path.join(directory, subdirectory);
-        jsFiles.push(...fc.readDirRecursive(subdirectoryPath, extension, excludeDir)
-          .map(fileName => path.join(subdirectory, fileName)));
+        jsFiles.push(
+          ...fc
+            .readDirRecursive(subdirectoryPath, extension, excludeDir)
+            .map((fileName) => path.join(subdirectory, fileName))
+        );
       });
 
     return jsFiles;
@@ -231,7 +239,7 @@ let fc = {
     };
 
     return clone(source);
-  }
-}
+  },
+};
 
-export default fc
+export default fc;

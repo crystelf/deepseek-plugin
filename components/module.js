@@ -1,5 +1,16 @@
-let mc = {
+import { Plugin_Name } from '#path';
 
+const _path = process.cwd();
+const getRoot = (root = '') => {
+  if (root === 'root' || root === 'yunzai') {
+    root = `${_path}/`;
+  } else if (!root) {
+    root = `${_path}/plugins/${Plugin_Name}/`;
+  }
+  return root;
+};
+
+let mc = {
   /**
    * 动态导入JS模块
    * @param {string} file - 模块文件路径（可省略.js后缀）
@@ -11,10 +22,10 @@ let mc = {
    * @example
    * const module = await fc.importModule("utils/helper")
    */
-  async importModule(file, root = "") {
+  async importModule(file, root = '') {
     root = getRoot(root);
     if (!/\.js$/.test(file)) {
-      file = file + ".js";
+      file = file + '.js';
     }
     if (fs.existsSync(`${root}/${file}`)) {
       try {
@@ -38,8 +49,7 @@ let mc = {
   async importDefault(file, root) {
     let ret = await fc.importModule(file, root);
     return ret.default || {};
-  }
-
-}
+  },
+};
 
 export default mc;
