@@ -56,7 +56,7 @@ export class DeepSeek extends plugin {
     const isNicknameTrigger = e.msg.startsWith(nickName);
     let historyLength = DeepseekConfig.default_history_length;
     let maxLength = DeepseekConfig.default_max_length;
-    let customPrompt = DeepseekConfig.default_prompt;
+    let customPrompt = `现在的时间是${new Date().toLocaleString('zh-CN', { hour12: false })},${DeepseekConfig.default_prompt}`;
     let temperature = DeepseekConfig.default_temperature;
     historyLength = historyLength >= 0 && historyLength <= 20 ? historyLength : 3;
     maxLength = maxLength >= 0 && maxLength <= 10 ? maxLength : 3;
@@ -109,7 +109,7 @@ export class DeepSeek extends plugin {
 
     let originalRetMsg = completion.choices[0].message.content;
 
-    originalRetMsg = originalRetMsg.replace(/<think>[\s\S]*?<\/think>/g, '');
+    originalRetMsg = originalRetMsg。replace(/<think>[\s\S]*?<\/think>/g， '');
 
     const MAX_MESSAGE_LENGTH = DeepseekConfig.max_message_length || 100;
 
