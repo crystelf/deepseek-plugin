@@ -81,7 +81,7 @@ export class DeepSeek extends plugin {
       e,
       [...prompt, ...groupMessages[e.group_id]],
       temperature,
-      { role: 'user', content: `用户名:${e.sender.nickname}，userid:${e.user_id}说：${msg}` },
+      { role: 'user', content: `用户名:${e.sender.nickname},userid:${e.user_id}说：${msg}` },
       isNicknameTrigger
     );
   }
@@ -109,7 +109,7 @@ export class DeepSeek extends plugin {
 
     let originalRetMsg = completion.choices[0].message.content;
 
-    originalRetMsg = originalRetMsg。replace(/<think>[\s\S]*?<\/think>/g， '');
+    originalRetMsg = originalRetMsg.replace(/<think>[\s\S]*?<\/think>/g, '');
 
     const MAX_MESSAGE_LENGTH = DeepseekConfig.max_message_length || 100;
 
