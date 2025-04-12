@@ -56,7 +56,7 @@ export class DeepSeek extends plugin {
     const isNicknameTrigger = e.msg.startsWith(nickName);
     let historyLength = DeepseekConfig.default_history_length;
     let maxLength = DeepseekConfig.default_max_length;
-    let customPrompt = DeepseekConfig.default_prompt;
+    let customPrompt = `现在的时间是${new Date().toLocaleString('zh-CN', { hour12: false })},${DeepseekConfig.default_prompt}`;
     let temperature = DeepseekConfig.default_temperature;
     historyLength = historyLength >= 0 && historyLength <= 20 ? historyLength : 3;
     maxLength = maxLength >= 0 && maxLength <= 10 ? maxLength : 3;
@@ -81,7 +81,7 @@ export class DeepSeek extends plugin {
       e,
       [...prompt, ...groupMessages[e.group_id]],
       temperature,
-      { role: 'user', content: `用户名:${e.sender.nickname}，userid:${e.user_id}说：${msg}` },
+      { role: 'user', content: `用户名:${e.sender.nickname},userid:${e.user_id}说：${msg}` },
       isNicknameTrigger
     );
   }
