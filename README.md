@@ -1,3 +1,6 @@
+# 该插件将被合并到[crystelf-plugin](https://github.com/Jerryplusy/crystelf-plugin?tab=readme-ov-file)
+本仓库将不再更新
+
 ## 部署
 
 - clone项目到plugins目录
